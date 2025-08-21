@@ -1,0 +1,160 @@
+scenario:
+  id: "f3a8b2c1-5678-9012-3456-789abcdef123"
+  title: "Network Connectivity Issues - Department Outage"
+  description: "A multi-user network connectivity issue affecting an entire department. Requires systematic troubleshooting, escalation decisions, and coordination with network team."
+  version: "1.0.0"
+  difficulty: "intermediate"
+  estimatedTime: 45
+  xpReward: 150
+  prerequisites: ["c7e8d9f0-1234-5678-9abc-def012345678"]
+  tags: ["network", "connectivity", "department", "escalation", "intermediate"]
+  
+  ticketTemplate:
+    priority: "high"
+    category: "Network Infrastructure"
+    title: "Network Outage - Finance Department"
+    description: "Multiple users in Finance department reporting loss of network connectivity. Unable to access shared drives, email server, or internet. Issue started approximately 20 minutes ago."
+    customerInfo:
+      name: "Michael Chen"
+      department: "Finance"
+      role: "Finance Manager"
+      contactInfo:
+        email: "michael.chen@company.com"
+        phone: "+1 (555) 234-5678"
+        location: "Floor 3, Finance Department"
+      assetTag: "LAP-FIN-0156"
+    technicalContext:
+      systemSpecs:
+        os: "Windows 11 Professional"
+        hardware: "HP EliteBook 840, 32GB RAM"
+        software: ["QuickBooks", "Excel", "SAP", "Teams"]
+      errorMessages:
+        - "Network path not found"
+        - "DNS server not responding"
+        - "Limited connectivity detected"
+        - "Cannot reach DHCP server"
+      environment:
+        network: "Finance VLAN 30"
+        domain: "COMPANY.LOCAL"
+        securityContext: "Department network segment"
+      symptoms:
+        - "No internet access across department"
+        - "Cannot map network drives"
+        - "Email offline in Outlook"
+        - "Teams showing offline status"
+        - "Other departments appear unaffected"
+  
+  customerPersona:
+    name: "Michael Chen"
+    personalityTraits:
+      patience: 4
+      technicalKnowledge: 6
+      communicationStyle: "frustrated"
+      helpfulness: 7
+    technicalLevel: "intermediate"
+    communicationStyle:
+      responseLength: "brief"
+      formality: "professional"
+      emotionalState: "urgent"
+    behaviorPatterns:
+      followsInstructions: true
+      providesDetails: true
+      asksClarifyingQuestions: true
+      becomesImpatient: true
+  
+  knowledgeBaseEntries:
+    - title: "Network Troubleshooting Methodology"
+      content: "Follow OSI model troubleshooting: Physical layer (cables, ports), Data Link (switches), Network (routers, IP), Transport (ports), Application. Start with physical and work up."
+      credibility: 0.95
+      relevance: 1.0
+      category: "Network Troubleshooting"
+      tags: ["troubleshooting", "methodology", "osi-model"]
+    
+    - title: "VLAN Configuration Issues"
+      content: "Common VLAN problems include port assignment errors, trunk configuration issues, and DHCP scope problems. Check switch port VLAN assignment and DHCP server status."
+      credibility: 0.8
+      relevance: 0.9
+      category: "Network Infrastructure"
+      tags: ["vlan", "switch", "dhcp"]
+    
+    - title: "Network Escalation Procedures"
+      content: "Escalate to Network Team for: Switch/router configuration issues, VLAN problems, infrastructure outages affecting multiple users, or physical cable issues requiring specialized tools."
+      credibility: 1.0
+      relevance: 0.8
+      category: "Escalation Procedures"
+      tags: ["escalation", "network-team", "procedures"]
+    
+    - title: "DHCP Server Troubleshooting"
+      content: "Check DHCP server status, scope availability, and lease conflicts. Common issues include scope exhaustion, server downtime, or configuration changes."
+      credibility: 0.85
+      relevance: 0.7
+      category: "Network Services"
+      tags: ["dhcp", "server", "ip-address"]
+    
+    - title: "Switch Port Diagnostics"
+      content: "Use network monitoring tools to check switch port status, traffic counters, and error statistics. Look for link up/down events, CRC errors, or port security violations."
+      credibility: 0.9
+      relevance: 0.85
+      category: "Network Monitoring"
+      tags: ["switch", "monitoring", "diagnostics"]
+  
+  assessmentCriteria:
+    technical:
+      diagnosticAccuracy: 85
+      solutionEffectiveness: 80
+      troubleshootingMethodology: 90
+    communication:
+      clarity: 80
+      empathy: 85
+      professionalism: 85
+    procedure:
+      followsProtocol: 90
+      documentation: 85
+      timeManagement: 80
+    timeManagement:
+      responseTime: 85
+      resolutionTime: 75
+      efficiency: 80
+  
+  successCriteria:
+    - description: "Follows systematic troubleshooting methodology"
+      weight: 0.25
+      validation: "ai_assisted"
+      condition: "Tests connectivity in logical order from physical to application layer"
+    
+    - description: "Identifies scope of the problem correctly"
+      weight: 0.2
+      validation: "manual"
+      condition: "Determines issue affects Finance department specifically"
+    
+    - description: "Escalates appropriately to network team"
+      weight: 0.2
+      validation: "manual"
+      condition: "Recognizes when issue requires network infrastructure expertise"
+    
+    - description: "Communicates effectively during high-stress situation"
+      weight: 0.15
+      validation: "ai_assisted"
+      condition: "Maintains calm and provides clear updates"
+    
+    - description: "Documents troubleshooting steps and findings"
+      weight: 0.1
+      validation: "manual"
+      condition: "Records all tests performed and results"
+    
+    - description: "Provides temporary workarounds when possible"
+      weight: 0.1
+      validation: "ai_assisted"
+      condition: "Suggests alternative connectivity methods or priorities"
+  
+  metadata:
+    author: "Network Training Team"
+    createdAt: "2025-01-15T11:00:00Z"
+    updatedAt: "2025-01-15T11:00:00Z"
+    reviewStatus: "approved"
+    reviewNotes: "Good scenario for teaching escalation procedures and systematic troubleshooting"
+    analytics:
+      usageCount: 0
+      averageCompletionTime: null
+      successRate: null
+      averageScore: null

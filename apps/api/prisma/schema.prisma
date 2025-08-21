@@ -1,0 +1,401 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  passwordHash      String    @map("password_hash")
+  firstName         String?   @map("first_name")
+  lastName          String?   @map("last_name")
+  level             Int       @default(1)
+  xp                Int       @default(0)
+  timezone          String    @default("UTC")
+  preferences       String    @default("{}") @map("preferences")
+  isVerified        Boolean   @default(false) @map("is_verified")
+  verificationToken String?   @unique @map("verification_token")
+  resetToken        String?   @unique @map("reset_token")
+  resetTokenExpiry  DateTime? @map("reset_token_expiry")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  lastLoginAt       DateTime? @map("last_login_at")
+
+  // Relations
+  sessions           UserSession[]
+  performanceMetrics PerformanceMetric[]
+  achievements       UserAchievement[]
+  chatMessages       ChatMessage[]
+  
+  // Ticket system relations
+  assignedTickets     Ticket[]           @relation("AssignedTickets")
+  createdTickets      Ticket[]           @relation("CreatedTickets")
+  ticketHistory       TicketHistory[]    @relation("TicketHistoryUser")
+  ticketUpdates       TicketUpdate[]     @relation("TicketUpdateUser")
+  escalatedByTickets  TicketEscalation[] @relation("EscalatedByUser")
+  escalatedToTickets  TicketEscalation[] @relation("EscalatedToUser")
+  resolvedEscalations TicketEscalation[] @relation("ResolvedByUser")
+  createdTemplates    TicketTemplate[]   @relation("TemplateCreator")
+
+  @@index([email])
+  @@index([verificationToken])
+  @@index([resetToken])
+  @@map("users")
+}
+
+model Scenario {
+  id                    String  @id @default(cuid())
+  title                 String
+  description           String
+  difficulty            String  // SQLite doesn't support enums, use string
+  estimatedTime         Int     @map("estimated_time")
+  xpReward              Int     @map("xp_reward")
+  ticketTemplate        String  @map("ticket_template")
+  customerPersona       String  @map("customer_persona")
+  knowledgeBaseEntries  String  @map("knowledge_base_entries")
+  assessmentCriteria    String  @map("assessment_criteria")
+  prerequisites         String  @default("[]") @map("prerequisites")
+  isActive              Boolean @default(true) @map("is_active")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  sessions           UserSession[]
+  performanceMetrics PerformanceMetric[]
+  tickets            Ticket[]
+
+  @@index([difficulty])
+  @@index([isActive])
+  @@map("scenarios")
+}
+
+model UserSession {
+  id                 String    @id @default(cuid())
+  userId             String    @map("user_id")
+  scenarioId         String    @map("scenario_id")
+  status             String    @default("active") // SQLite doesn't support enums
+  startedAt          DateTime  @default(now()) @map("started_at")
+  completedAt        DateTime? @map("completed_at")
+  chatHistory        String    @default("[]") @map("chat_history")
+  performanceData    String    @default("{}") @map("performance_data")
+  verificationStatus String    @default("{}") @map("verification_status")
+  resolutionData     String    @default("{}") @map("resolution_data")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenario           Scenario            @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  performanceMetrics PerformanceMetric[]
+  chatMessages       ChatMessage[]
+
+  @@index([userId])
+  @@index([scenarioId])
+  @@index([status])
+  @@map("user_sessions")
+}
+
+model PerformanceMetric {
+  id                   String   @id @default(cuid())
+  userId               String   @map("user_id")
+  sessionId            String   @map("session_id")
+  scenarioId           String   @map("scenario_id")
+  verificationScore    Float    @map("verification_score")
+  communicationScore   Float    @map("communication_score")
+  technicalScore       Float    @map("technical_score")
+  documentationScore   Float    @map("documentation_score")
+  responseTimeScore    Float    @map("response_time_score")
+  overallScore         Float    @map("overall_score")
+  xpEarned             Int      @map("xp_earned")
+  completionTime       Int      @map("completion_time")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session UserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  scenario Scenario   @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([scenarioId])
+  @@map("performance_metrics")
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  sessionId      String   @map("session_id")
+  userId         String   @map("user_id")
+  senderType     String   @map("sender_type")
+  messageContent String   @map("message_content")
+  messageType    String   @map("message_type") @default("text")
+  metadata       String   @default("{}") @map("metadata")
+  timestamp      DateTime @default(now())
+
+  // Relations
+  session UserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([timestamp])
+  @@map("chat_messages")
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String
+  tier        String
+  xpReward    Int      @map("xp_reward")
+  criteria    String   @default("{}")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  achievementId String   @map("achievement_id")
+  earnedAt      DateTime @default(now()) @map("earned_at")
+
+  // Relations
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+model Ticket {
+  id                     String   @id @default(cuid())
+  ticketNumber           String   @unique @map("ticket_number")
+  title                  String
+  description            String
+  category               String   // TicketCategory enum as string
+  priority               String   // TicketPriority enum as string
+  status                 String   @default("open") // TicketStatus enum as string
+  customerId             String   @map("customer_id")
+  assignedTo             String?  @map("assigned_to")
+  createdBy              String   @map("created_by")
+  scenarioId             String?  @map("scenario_id")
+  templateId             String?  @map("template_id")
+  slaResponseTimeMinutes Int      @map("sla_response_time_minutes")
+  slaResolutionTimeHours Int      @map("sla_resolution_time_hours")
+  slaEscalationTimeHours Int      @map("sla_escalation_time_hours")
+  actualResponseTime     Int?     @map("actual_response_time")
+  actualResolutionTime   Int?     @map("actual_resolution_time")
+  slaBreached            Boolean  @default(false) @map("sla_breached")
+  breachReason           String?  @map("breach_reason")
+  escalationLevel        Int      @default(0) @map("escalation_level")
+  resolution             String?  @default("{}") // JSON string
+  metadata               String   @default("{}") // JSON string
+  closedAt               DateTime? @map("closed_at")
+  resolvedAt             DateTime? @map("resolved_at")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  customer      Customer           @relation(fields: [customerId], references: [id])
+  assignedUser  User?              @relation("AssignedTickets", fields: [assignedTo], references: [id])
+  creator       User               @relation("CreatedTickets", fields: [createdBy], references: [id])
+  scenario      Scenario?          @relation(fields: [scenarioId], references: [id])
+  template      TicketTemplate?    @relation(fields: [templateId], references: [id])
+  assets        TicketAsset[]
+  history       TicketHistory[]
+  updates       TicketUpdate[]
+  escalations   TicketEscalation[]
+
+  @@index([ticketNumber])
+  @@index([customerId])
+  @@index([assignedTo])
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([createdAt])
+  @@map("tickets")
+}
+
+model Customer {
+  id                    String   @id @default(cuid())
+  firstName             String   @map("first_name")
+  lastName              String   @map("last_name")
+  fullName              String   @map("full_name")
+  email                 String   @unique
+  phone                 String?
+  department            String   // Department enum as string
+  jobTitle              String   @map("job_title")
+  officeLocation        String?  @map("office_location")
+  employeeId            String?  @unique @map("employee_id")
+  manager               String?
+  technicalSkillLevel   String   @map("technical_skill_level")
+  preferredContactMethod String  @map("preferred_contact_method")
+  timezone              String
+  workingHours          String   @map("working_hours") // JSON string
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  tickets Ticket[]
+
+  @@index([email])
+  @@index([employeeId])
+  @@index([department])
+  @@map("customers")
+}
+
+model Asset {
+  id                   String    @id @default(cuid())
+  assetTag             String    @unique @map("asset_tag")
+  assetType            String    @map("asset_type")
+  manufacturer         String
+  model                String
+  serialNumber         String?   @map("serial_number")
+  operatingSystem      String?   @map("operating_system")
+  osVersion            String?   @map("os_version")
+  purchaseDate         DateTime? @map("purchase_date")
+  warrantyExpiration   DateTime? @map("warranty_expiration")
+  assignedUser         String?   @map("assigned_user")
+  location             String?
+  specifications       String    @default("{}") // JSON string
+  installedSoftware    String    @default("[]") // JSON string
+  lastMaintenanceDate  DateTime? @map("last_maintenance_date")
+  maintenanceSchedule  String?   @map("maintenance_schedule")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  tickets TicketAsset[]
+
+  @@index([assetTag])
+  @@index([assetType])
+  @@index([assignedUser])
+  @@map("assets")
+}
+
+model TicketAsset {
+  id       String @id @default(cuid())
+  ticketId String @map("ticket_id")
+  assetId  String @map("asset_id")
+
+  // Relations
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  asset  Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, assetId])
+  @@map("ticket_assets")
+}
+
+model TicketHistory {
+  id          String   @id @default(cuid())
+  ticketId    String   @map("ticket_id")
+  action      String   // Action type (created, status_changed, assigned, etc.)
+  oldValue    String?  @map("old_value") // JSON string
+  newValue    String?  @map("new_value") // JSON string
+  comment     String?
+  performedBy String   @map("performed_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User   @relation("TicketHistoryUser", fields: [performedBy], references: [id])
+
+  @@index([ticketId])
+  @@index([performedBy])
+  @@index([createdAt])
+  @@map("ticket_history")
+}
+
+model TicketUpdate {
+  id        String   @id @default(cuid())
+  ticketId  String   @map("ticket_id")
+  updateType String  @map("update_type") // progress, status, assignment, etc.
+  title     String?
+  content   String
+  isInternal Boolean @default(false) @map("is_internal")
+  createdBy String   @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User   @relation("TicketUpdateUser", fields: [createdBy], references: [id])
+
+  @@index([ticketId])
+  @@index([createdBy])
+  @@index([createdAt])
+  @@map("ticket_updates")
+}
+
+model TicketEscalation {
+  id           String   @id @default(cuid())
+  ticketId     String   @map("ticket_id")
+  level        Int
+  reason       String
+  escalatedBy  String   @map("escalated_by")
+  escalatedTo  String?  @map("escalated_to")
+  resolvedBy   String?  @map("resolved_by")
+  resolvedAt   DateTime? @map("resolved_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  ticket       Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  escalator    User   @relation("EscalatedByUser", fields: [escalatedBy], references: [id])
+  escalatee    User?  @relation("EscalatedToUser", fields: [escalatedTo], references: [id])
+  resolver     User?  @relation("ResolvedByUser", fields: [resolvedBy], references: [id])
+
+  @@index([ticketId])
+  @@index([level])
+  @@index([createdAt])
+  @@map("ticket_escalations")
+}
+
+model TicketTemplate {
+  id                         String   @id @default(cuid())
+  name                       String
+  category                   String   // TicketCategory enum as string
+  priority                   String   // TicketPriority enum as string
+  difficultyLevel            String   @map("difficulty_level")
+  titleTemplates             String   @map("title_templates") // JSON array
+  descriptionTemplates       String   @map("description_templates") // JSON array
+  customerProfiles           String   @map("customer_profiles") // JSON array
+  assetTemplates             String   @map("asset_templates") // JSON array
+  technicalContextTemplates  String   @map("technical_context_templates") // JSON array
+  learningObjectives         String   @map("learning_objectives") // JSON array
+  expectedResolutionSteps    String   @map("expected_resolution_steps") // JSON array
+  skillsRequired             String   @map("skills_required") // JSON array
+  knowledgeBaseArticles      String   @map("knowledge_base_articles") // JSON array
+  estimatedResolutionTime    Int      @map("estimated_resolution_time")
+  complexity                 String
+  businessImpact             String   @map("business_impact")
+  variationRules             String   @map("variation_rules") // JSON object
+  usageCount                 Int      @default(0) @map("usage_count")
+  successRate                Float    @default(0) @map("success_rate")
+  averageResolutionTime      Float    @default(0) @map("average_resolution_time")
+  tags                       String   @default("[]") // JSON array
+  isActive                   Boolean  @default(true) @map("is_active")
+  createdBy                  String   @map("created_by")
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  tickets Ticket[]
+  creator User     @relation("TemplateCreator", fields: [createdBy], references: [id])
+
+  @@index([category])
+  @@index([priority])
+  @@index([difficultyLevel])
+  @@index([isActive])
+  @@map("ticket_templates")
+}

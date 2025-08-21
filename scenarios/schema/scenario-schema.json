@@ -1,0 +1,525 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IT Helpdesk Scenario Schema",
+  "description": "JSON Schema for validating IT helpdesk learning scenarios",
+  "type": "object",
+  "required": ["scenario"],
+  "properties": {
+    "scenario": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "version",
+        "difficulty",
+        "estimatedTime",
+        "xpReward",
+        "ticketTemplate",
+        "customerPersona",
+        "knowledgeBaseEntries",
+        "assessmentCriteria",
+        "successCriteria",
+        "metadata"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "UUID identifier for the scenario"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Scenario title"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000,
+          "description": "Detailed scenario description"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version number"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["starter", "intermediate", "advanced"],
+          "description": "Scenario difficulty level"
+        },
+        "estimatedTime": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 180,
+          "description": "Estimated completion time in minutes"
+        },
+        "xpReward": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 1000,
+          "description": "Experience points awarded for completion"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          },
+          "description": "Array of prerequisite scenario IDs"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags for categorization and search"
+        },
+        "ticketTemplate": {
+          "type": "object",
+          "required": [
+            "priority",
+            "category",
+            "title",
+            "description",
+            "customerInfo",
+            "technicalContext"
+          ],
+          "properties": {
+            "priority": {
+              "type": "string",
+              "enum": ["low", "medium", "high"]
+            },
+            "category": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": {
+              "type": "string",
+              "minLength": 10
+            },
+            "customerInfo": {
+              "type": "object",
+              "required": [
+                "name",
+                "department",
+                "role",
+                "contactInfo",
+                "assetTag"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "department": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "contactInfo": {
+                  "type": "object",
+                  "required": ["email"],
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "assetTag": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "technicalContext": {
+              "type": "object",
+              "required": [
+                "systemSpecs",
+                "errorMessages",
+                "environment",
+                "symptoms"
+              ],
+              "properties": {
+                "systemSpecs": {
+                  "type": "object",
+                  "required": ["os", "hardware"],
+                  "properties": {
+                    "os": {
+                      "type": "string"
+                    },
+                    "hardware": {
+                      "type": "string"
+                    },
+                    "software": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "errorMessages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "environment": {
+                  "type": "object",
+                  "properties": {
+                    "network": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    },
+                    "securityContext": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "symptoms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "customerPersona": {
+          "type": "object",
+          "required": [
+            "name",
+            "personalityTraits",
+            "technicalLevel",
+            "communicationStyle",
+            "behaviorPatterns"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "personalityTraits": {
+              "type": "object",
+              "required": [
+                "patience",
+                "technicalKnowledge",
+                "communicationStyle",
+                "helpfulness"
+              ],
+              "properties": {
+                "patience": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                },
+                "technicalKnowledge": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                },
+                "communicationStyle": {
+                  "type": "string",
+                  "enum": ["formal", "casual", "technical", "frustrated"]
+                },
+                "helpfulness": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                }
+              }
+            },
+            "technicalLevel": {
+              "type": "string",
+              "enum": ["novice", "intermediate", "advanced"]
+            },
+            "communicationStyle": {
+              "type": "object",
+              "required": ["responseLength", "formality", "emotionalState"],
+              "properties": {
+                "responseLength": {
+                  "type": "string",
+                  "enum": ["brief", "detailed", "verbose"]
+                },
+                "formality": {
+                  "type": "string",
+                  "enum": ["casual", "professional", "very_formal"]
+                },
+                "emotionalState": {
+                  "type": "string",
+                  "enum": ["calm", "stressed", "frustrated", "urgent"]
+                }
+              }
+            },
+            "behaviorPatterns": {
+              "type": "object",
+              "required": [
+                "followsInstructions",
+                "providesDetails",
+                "asksClarifyingQuestions",
+                "becomesImpatient"
+              ],
+              "properties": {
+                "followsInstructions": {
+                  "type": "boolean"
+                },
+                "providesDetails": {
+                  "type": "boolean"
+                },
+                "asksClarifyingQuestions": {
+                  "type": "boolean"
+                },
+                "becomesImpatient": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "knowledgeBaseEntries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "title",
+              "content",
+              "credibility",
+              "relevance",
+              "category"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content": {
+                "type": "string",
+                "minLength": 10
+              },
+              "credibility": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "relevance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "category": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "assessmentCriteria": {
+          "type": "object",
+          "required": [
+            "technical",
+            "communication",
+            "procedure",
+            "timeManagement"
+          ],
+          "properties": {
+            "technical": {
+              "type": "object",
+              "required": [
+                "diagnosticAccuracy",
+                "solutionEffectiveness",
+                "troubleshootingMethodology"
+              ],
+              "properties": {
+                "diagnosticAccuracy": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "solutionEffectiveness": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "troubleshootingMethodology": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            },
+            "communication": {
+              "type": "object",
+              "required": ["clarity", "empathy", "professionalism"],
+              "properties": {
+                "clarity": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "empathy": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "professionalism": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            },
+            "procedure": {
+              "type": "object",
+              "required": [
+                "followsProtocol",
+                "documentation",
+                "timeManagement"
+              ],
+              "properties": {
+                "followsProtocol": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "documentation": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "timeManagement": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            },
+            "timeManagement": {
+              "type": "object",
+              "required": ["responseTime", "resolutionTime", "efficiency"],
+              "properties": {
+                "responseTime": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "resolutionTime": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "efficiency": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          }
+        },
+        "successCriteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["description", "weight", "validation", "condition"],
+            "properties": {
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "validation": {
+                "type": "string",
+                "enum": ["automatic", "manual", "ai_assisted"]
+              },
+              "condition": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["author", "createdAt", "updatedAt", "reviewStatus"],
+          "properties": {
+            "author": {
+              "type": "string",
+              "minLength": 1
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "reviewStatus": {
+              "type": "string",
+              "enum": ["draft", "review", "approved", "deprecated"]
+            },
+            "reviewNotes": {
+              "type": "string"
+            },
+            "analytics": {
+              "type": "object",
+              "properties": {
+                "usageCount": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "averageCompletionTime": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "successRate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "averageScore": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

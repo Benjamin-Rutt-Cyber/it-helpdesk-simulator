@@ -1,0 +1,29 @@
+'use client';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+
+export default function ResumePage() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Resume Builder</h1>
+        <p className="text-gray-600 mt-2">
+          Build your professional IT resume with your achievements
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Professional Resume</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8">
+              <p className="text-gray-500">Resume builder coming soon...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

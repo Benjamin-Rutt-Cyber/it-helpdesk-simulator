@@ -1,0 +1,167 @@
+scenario:
+  id: "a9b8c7d6-9012-3456-7890-123456789abc"
+  title: "Security Incident Response - Suspected Data Breach"
+  description: "A complex security incident involving suspected unauthorized access and potential data exfiltration. Requires immediate response, evidence preservation, stakeholder coordination, and compliance procedures."
+  version: "1.0.0"
+  difficulty: "advanced"
+  estimatedTime: 90
+  xpReward: 300
+  prerequisites: ["c7e8d9f0-1234-5678-9abc-def012345678", "f3a8b2c1-5678-9012-3456-789abcdef123"]
+  tags: ["security", "incident-response", "breach", "compliance", "advanced", "critical"]
+  
+  ticketTemplate:
+    priority: "high"
+    category: "Security Incident"
+    title: "URGENT: Suspicious Activity - Potential Security Breach"
+    description: "Security monitoring system detected unusual data access patterns and large file transfers from HR database server. Multiple failed login attempts followed by successful authentication using valid credentials. Need immediate investigation and response."
+    customerInfo:
+      name: "Jennifer Rodriguez"
+      department: "Information Security"
+      role: "Security Operations Manager"
+      contactInfo:
+        email: "jennifer.rodriguez@company.com"
+        phone: "+1 (555) 345-6789"
+        location: "Security Operations Center"
+      assetTag: "WS-SEC-0001"
+    technicalContext:
+      systemSpecs:
+        os: "Windows Server 2022"
+        hardware: "Dell PowerEdge R740, 128GB RAM"
+        software: ["SQL Server 2019", "Active Directory", "Security Monitoring Suite"]
+      errorMessages:
+        - "Multiple authentication failures detected"
+        - "Unusual data access pattern alert"
+        - "Large data transfer volume warning"
+        - "Account privilege escalation detected"
+      environment:
+        network: "Secure DMZ Zone"
+        domain: "SECURE.COMPANY.LOCAL"
+        securityContext: "High-privilege database server"
+      symptoms:
+        - "Automated security alert triggered"
+        - "50GB data transfer at 2:30 AM"
+        - "Login from unusual IP address"
+        - "HR database accessed outside business hours"
+        - "Administrative privileges used unexpectedly"
+  
+  customerPersona:
+    name: "Jennifer Rodriguez"
+    personalityTraits:
+      patience: 3
+      technicalKnowledge: 9
+      communicationStyle: "technical"
+      helpfulness: 10
+    technicalLevel: "advanced"
+    communicationStyle:
+      responseLength: "detailed"
+      formality: "very_formal"
+      emotionalState: "urgent"
+    behaviorPatterns:
+      followsInstructions: true
+      providesDetails: true
+      asksClarifyingQuestions: true
+      becomesImpatient: false
+  
+  knowledgeBaseEntries:
+    - title: "Incident Response Procedures"
+      content: "Immediate steps: 1) Contain the threat 2) Preserve evidence 3) Assess impact 4) Notify stakeholders 5) Eradicate threat 6) Recover systems 7) Document lessons learned. Follow NIST Cybersecurity Framework."
+      credibility: 1.0
+      relevance: 1.0
+      category: "Security Procedures"
+      tags: ["incident-response", "nist", "containment"]
+    
+    - title: "Evidence Preservation Guidelines"
+      content: "Preserve all logs, memory dumps, and system states. Use write-blocking tools for disk imaging. Maintain chain of custody documentation. Do not power down systems unless absolutely necessary."
+      credibility: 0.95
+      relevance: 0.9
+      category: "Digital Forensics"
+      tags: ["evidence", "forensics", "chain-of-custody"]
+    
+    - title: "Data Breach Notification Requirements"
+      content: "Under GDPR and state laws, data breaches must be reported within 72 hours. Notify legal team, compliance officer, and affected customers. Document all communication and decisions."
+      credibility: 1.0
+      relevance: 0.8
+      category: "Compliance"
+      tags: ["gdpr", "notification", "compliance"]
+    
+    - title: "Network Isolation Procedures"
+      content: "Isolate affected systems by disabling network interfaces or implementing firewall rules. Maintain monitoring capabilities while preventing lateral movement. Coordinate with network team."
+      credibility: 0.9
+      relevance: 0.85
+      category: "Network Security"
+      tags: ["isolation", "containment", "network"]
+    
+    - title: "Stakeholder Communication Protocol"
+      content: "Immediate notification required for: CISO, Legal Counsel, CEO, Compliance Officer. Use secure communication channels. Provide regular updates every 2 hours during active incident."
+      credibility: 1.0
+      relevance: 0.7
+      category: "Communication"
+      tags: ["stakeholders", "communication", "escalation"]
+    
+    - title: "Log Analysis Best Practices"
+      content: "Correlate logs from multiple sources: firewalls, servers, authentication systems. Look for indicators of compromise (IoCs), timeline reconstruction, and attack vectors. Use SIEM tools for analysis."
+      credibility: 0.85
+      relevance: 0.8
+      category: "Log Analysis"
+      tags: ["logs", "siem", "analysis"]
+  
+  assessmentCriteria:
+    technical:
+      diagnosticAccuracy: 95
+      solutionEffectiveness: 90
+      troubleshootingMethodology: 95
+    communication:
+      clarity: 90
+      empathy: 70
+      professionalism: 95
+    procedure:
+      followsProtocol: 98
+      documentation: 95
+      timeManagement: 85
+    timeManagement:
+      responseTime: 95
+      resolutionTime: 80
+      efficiency: 85
+  
+  successCriteria:
+    - description: "Implements immediate containment measures"
+      weight: 0.25
+      validation: "manual"
+      condition: "Isolates affected systems and prevents further access"
+    
+    - description: "Preserves digital evidence properly"
+      weight: 0.2
+      validation: "manual"
+      condition: "Maintains chain of custody and preserves all relevant logs"
+    
+    - description: "Follows incident response protocol exactly"
+      weight: 0.2
+      validation: "ai_assisted"
+      condition: "Executes all required steps in correct order"
+    
+    - description: "Notifies all required stakeholders promptly"
+      weight: 0.15
+      validation: "manual"
+      condition: "Contacts all mandatory personnel within required timeframes"
+    
+    - description: "Demonstrates advanced technical analysis"
+      weight: 0.1
+      validation: "ai_assisted"
+      condition: "Performs thorough log analysis and identifies attack vectors"
+    
+    - description: "Maintains composure under extreme pressure"
+      weight: 0.1
+      validation: "ai_assisted"
+      condition: "Communicates clearly and makes sound decisions despite urgency"
+  
+  metadata:
+    author: "Security Training Team"
+    createdAt: "2025-01-15T12:00:00Z"
+    updatedAt: "2025-01-15T12:00:00Z"
+    reviewStatus: "approved"
+    reviewNotes: "Advanced scenario requiring comprehensive security knowledge and incident response skills"
+    analytics:
+      usageCount: 0
+      averageCompletionTime: null
+      successRate: null
+      averageScore: null
