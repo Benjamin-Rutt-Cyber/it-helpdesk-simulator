@@ -516,7 +516,7 @@ class TransparencyService {
         points: 5,
         whatWasMissing: 'Resolution time exceeded 30 minutes',
         howToEarn: 'Complete tickets more efficiently',
-        difficulty: 'medium'
+        difficulty: 'medium' as const
       }
     ].filter(opp => !bonusApplications.some(bonus => bonus.ruleId.includes(opp.bonusName.toLowerCase())));
 
@@ -717,7 +717,7 @@ class TransparencyService {
   /**
    * Helper methods for explanations
    */
-  private async explainScoreReasoning(report: TransparencyReport, detailLevel: string): Promise<ExplanationResponse> {
+  private async explainScoreReasoning(report: TransparencyReport, detailLevel: 'basic' | 'detailed' | 'expert'): Promise<ExplanationResponse> {
     let explanation: string;
     
     if (detailLevel === 'basic') {
@@ -753,7 +753,7 @@ class TransparencyService {
     };
   }
 
-  private async explainImprovementPath(report: TransparencyReport, detailLevel: string): Promise<ExplanationResponse> {
+  private async explainImprovementPath(report: TransparencyReport, detailLevel: 'basic' | 'detailed' | 'expert'): Promise<ExplanationResponse> {
     const topSuggestions = report.improvementSuggestions.slice(0, 3);
     
     const explanation = detailLevel === 'basic' 
@@ -779,7 +779,7 @@ class TransparencyService {
     };
   }
 
-  private async explainBonusSystem(report: TransparencyReport, detailLevel: string): Promise<ExplanationResponse> {
+  private async explainBonusSystem(report: TransparencyReport, detailLevel: 'basic' | 'detailed' | 'expert'): Promise<ExplanationResponse> {
     const explanation = detailLevel === 'basic'
       ? `You earned ${report.bonusExplanation.totalBonus} bonus XP from ${report.bonusExplanation.individualBonuses.length} achievements.`
       : report.bonusExplanation.individualBonuses.map(b => `${b.bonusName}: +${b.points} XP - ${b.whyEarned}`).join('\n');
@@ -803,7 +803,7 @@ class TransparencyService {
     };
   }
 
-  private async explainComparisons(report: TransparencyReport, detailLevel: string): Promise<ExplanationResponse> {
+  private async explainComparisons(report: TransparencyReport, detailLevel: 'basic' | 'detailed' | 'expert'): Promise<ExplanationResponse> {
     const comp = report.comparativeAnalysis;
     
     const explanation = detailLevel === 'basic'
@@ -828,7 +828,7 @@ class TransparencyService {
     };
   }
 
-  private async explainWeightingLogic(report: TransparencyReport, detailLevel: string): Promise<ExplanationResponse> {
+  private async explainWeightingLogic(report: TransparencyReport, detailLevel: 'basic' | 'detailed' | 'expert'): Promise<ExplanationResponse> {
     const weighting = report.performanceExplanation.weightingRationale;
     
     const explanation = detailLevel === 'basic'

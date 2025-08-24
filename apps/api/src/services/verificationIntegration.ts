@@ -1,5 +1,9 @@
 import { logger } from '../utils/logger';
-import { verificationService, VerificationStatus } from './verificationService';
+import { VerificationService } from './verificationService';
+
+const verificationService = new VerificationService();
+
+type VerificationStatus = 'pending' | 'active' | 'completed' | 'failed' | 'bypassed';
 import { verificationTracker } from './verificationTracker';
 import { securityGuardian } from './securityGuardian';
 
@@ -250,7 +254,11 @@ class VerificationIntegrationService {
       });
     }
 
-    return bypassResult;
+    return {
+      success: bypassResult.approved,
+      reason: bypassResult.reason,
+      conditions: bypassResult.conditions,
+    };
   }
 
   async getVerificationGateStatus(

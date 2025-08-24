@@ -389,7 +389,7 @@ class TrendAnalyzer {
   }
 
   private analyzeDailyPattern(data: TrendData[]): { strength: number; pattern: number[] } {
-    const hourlyData = new Array(24).fill(0).map(() => []);
+    const hourlyData: number[][] = new Array(24).fill(0).map(() => []);
 
     data.forEach(d => {
       const hour = d.timestamp.getHours();
@@ -411,7 +411,7 @@ class TrendAnalyzer {
   }
 
   private analyzeWeeklyPattern(data: TrendData[]): { strength: number; pattern: number[] } {
-    const dailyData = new Array(7).fill(0).map(() => []);
+    const dailyData: number[][] = new Array(7).fill(0).map(() => []);
 
     data.forEach(d => {
       const day = d.timestamp.getDay();

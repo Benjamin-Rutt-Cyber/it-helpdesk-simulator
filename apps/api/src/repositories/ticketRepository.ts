@@ -636,6 +636,46 @@ export class TicketRepository {
     }
   }
 
+  // Additional query methods
+  async queryTickets(filters: TicketFilters, sortOptions?: TicketSortOptions): Promise<TicketQueryResult> {
+    return this.search({
+      query: filters.query,
+      category: filters.category,
+      priority: filters.priority,
+      status: filters.status,
+      assignedTo: filters.assignedTo,
+      customerId: filters.customerId,
+      scenarioId: filters.scenarioId,
+      dateFrom: filters.dateRange?.start,
+      dateTo: filters.dateRange?.end,
+      slaBreached: filters.slaBreached,
+      escalationLevel: filters.escalationLevel,
+      page: filters.page,
+      limit: filters.limit,
+      sortBy: sortOptions?.field,
+      sortOrder: sortOptions?.direction,
+    });
+  }
+
+  async getTicketHistory(ticketId: string): Promise<TicketHistory[]> {
+    return this.getHistory(ticketId);
+  }
+
+  async getTicketsByUser(userId: string, filters?: TicketFilters): Promise<TicketQueryResult> {
+    return this.search({
+      ...filters,
+      assignedTo: userId,
+    });
+  }
+
+  async getTicketMetrics(filters?: TicketFilters): Promise<any> {
+    return this.getStatistics(filters);
+  }
+
+  async findById(ticketId: string): Promise<Ticket | null> {
+    return this.getById(ticketId);
+  }
+
   // Private helper methods
   private async generateTicketNumber(): Promise<string> {
     const today = new Date();
